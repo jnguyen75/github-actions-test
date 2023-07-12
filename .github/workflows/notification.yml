@@ -44,7 +44,7 @@ jobs:
                         "text": "Commit",
                         "emoji": true
                       },
-                      "url": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}",
+                      "url": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}"
                     },
                     {
                       "type": "button",
