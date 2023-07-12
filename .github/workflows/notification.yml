@@ -16,6 +16,7 @@ jobs:
       - name: Send Notification
         run: echo "Sending build failure notification..."
       - name: Send Slack Message
+        if: false
         uses: slackapi/slack-github-action@v1.24.0
         with:
           # Slack channel id, channel name, or user id to post message.
@@ -38,4 +39,4 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: (DEBUG) Print GitHub variables
-        run: echo "${{ github.event.workflow_run }}"
+        run: echo "${{ toJSON(github.event.workflow_run) }}"
