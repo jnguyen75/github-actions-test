@@ -1,0 +1,17 @@
+name: Test Notification
+
+on:
+  workflow_run:
+    workflows: [Test Workflow]
+    branches:
+      - main
+      - releases/**
+    types: completed
+
+jobs:
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Send Notification
+        run: echo "Sending build failure notification..."
