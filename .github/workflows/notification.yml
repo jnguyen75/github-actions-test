@@ -21,19 +21,43 @@ jobs:
         with:
           # Slack channel id, channel name, or user id to post message.
           # See also: https://api.slack.com/methods/chat.postMessage#channels
-          channel-id: 'C05GQNZF4Q2'
+          channel-id: "C05GQNZF4Q2"
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "GitHub build failure: ${{ github.event.workflow_run.html_url || github.event.workflow_run.head_commit.url }}",
+              "text": "GitHub build failure: ${{ github.event.workflow_run.html_url }}",
               "blocks": [
                 {
-                  "type": "section",
+                  "type": "header",
                   "text": {
-                    "type": "mrkdwn",
-                    "text": "GitHub build failure: ${{ github.event.workflow_run.html_url || github.event.workflow_run.head_commit.url }}"
-                  }
-                }
+                      "type": "plain_text",
+                      "text": "${{ github.event.workflow_run.head_repository.name }} build failed",
+                      "emoji": True,
+                  },
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                          "type": "plain_text",
+                          "text": "🛠️ Commit",
+                          "emoji": True,
+                      },
+                      "url": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}"",
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                          "type": "plain_text",
+                          "text": "👷 Pipeline",
+                          "emoji": True,
+                      },
+                      "url": ${{ github.event.workflow_run.html_url }},
+                    }
+                  ],
+                },
               ]
             }
         env:
