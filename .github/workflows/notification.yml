@@ -24,16 +24,18 @@ jobs:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "GitHub build result: ${{ github.event.workflow_run.status }}\n${{ github.event.workflow_run.html_url || github.event.workflow_run.head_commit.url }}",
+              "text": "GitHub build failure: ${{ github.event.workflow_run.html_url || github.event.workflow_run.head_commit.url }}",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub build result: ${{ github.event.workflow_run.status }}\n${{ github.event.workflow_run.html_url || github.event.workflow_run.head_commit.url }}"
+                    "text": "GitHub build failure: ${{ github.event.workflow_run.html_url || github.event.workflow_run.head_commit.url }}"
                   }
                 }
               ]
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: (DEBUG) Print GitHub variables
+        run: echo "${{ github.event.workflow_run }}"
