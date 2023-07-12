@@ -41,7 +41,7 @@ jobs:
                       "type": "button",
                       "text": {
                         "type": "plain_text",
-                        "text": "🛠️ Commit",
+                        "text": "Commit",
                         "emoji": true
                       },
                       "url": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}",
@@ -50,7 +50,7 @@ jobs:
                       "type": "button",
                       "text": {
                         "type": "plain_text",
-                        "text": "👷 Pipeline",
+                        "text": "Pipeline",
                         "emoji": true
                       },
                       "url": "${{ github.event.workflow_run.html_url }}",
