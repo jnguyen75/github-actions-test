@@ -26,7 +26,7 @@ on:
         default: test
 
 jobs:
-  test:
+  test1:
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -38,3 +38,7 @@ jobs:
           LEVEL: ${{ inputs.logLevel }}
           TAGS: ${{ inputs.tags }}
           ENVIRONMENT: ${{ inputs.environment }}
+  test2:
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1

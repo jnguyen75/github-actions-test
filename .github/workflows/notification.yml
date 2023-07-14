@@ -36,7 +36,7 @@ jobs:
           echo "Commit status: $job_failed"
           echo "job_failed=$job_failed" >> "$GITHUB_OUTPUT"
 
-  on-failure:
+  on-new-failure:
     runs-on: ubuntu-latest
     needs: previous-build
     if: ${{ needs.previous-build.outputs.job_failed == 'false' && github.event.workflow_run.conclusion == 'failure' }}
