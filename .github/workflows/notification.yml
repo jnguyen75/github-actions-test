@@ -62,7 +62,7 @@ jobs:
           payload: |
             {
               "attachments": [{
-                "color": ${{ github.event.workflow_run.conclusion == 'success' && '#238823' || '#D2222D' }},
+                "color": "${{ github.event.workflow_run.conclusion == 'success' && '#238823' || '#D2222D' }}",
                 "blocks": [
                   {
                     "type": "header",
