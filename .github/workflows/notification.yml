@@ -13,12 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Set final commit status
-      uses: myrotvorets/set-commit-status-action@master
+      uses: myrotvorets/set-commit-status-action@v1.1.7
       if: always()
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         status: ${{ github.event.workflow_run.conclusion }}
         context: Test Workflow
+        sha: ${{ github.sha }}
 
   previous-commit:
     runs-on: ubuntu-latest
