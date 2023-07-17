@@ -61,7 +61,7 @@ jobs:
           # Slack channel id, channel name, or user id to post message.
           # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: "C05GQNZF4Q2"
-          payload-file-path: "./payload-slack-content.json"
+          payload-file-path: .github/workflows/payload-slack-content.json
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: (DEBUG) Print GitHub variables
@@ -81,7 +81,7 @@ jobs:
           # Slack channel id, channel name, or user id to post message.
           # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: "C05GQNZF4Q2"
-          payload-file-path: "./payload-slack-content.json"
+          payload-file-path: .github/workflows/payload-slack-content.json
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: (DEBUG) Print GitHub variables
