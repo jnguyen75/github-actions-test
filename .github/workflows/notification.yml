@@ -71,7 +71,7 @@ jobs:
   on-new-success:
     runs-on: ubuntu-latest
     needs: previous-commit
-    if: ${{ needs.previous-commit.outputs.commit_state == 'failuire' && github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ needs.previous-commit.outputs.commit_state == 'failure' && github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Send Notification
         run: echo "Sending build failure notification..."
