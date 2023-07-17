@@ -53,8 +53,8 @@ jobs:
     needs: previous-commit
     if: ${{ needs.previous-commit.outputs.commit_state == 'success' && github.event.workflow_run.conclusion == 'failure' }}
     steps:
-      - name: Send Notification
-        run: echo "Sending build failure notification..."
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Send Slack Message
         uses: slackapi/slack-github-action@v1.24.0
         with:
@@ -73,8 +73,8 @@ jobs:
     needs: previous-commit
     if: ${{ needs.previous-commit.outputs.commit_state == 'failure' && github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Send Notification
-        run: echo "Sending build failure notification..."
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Send Slack Message
         uses: slackapi/slack-github-action@v1.24.0
         with:
