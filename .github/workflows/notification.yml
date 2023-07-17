@@ -61,40 +61,42 @@ jobs:
           channel-id: "C05GQNZF4Q2"
           payload: |
             {
-              "text": "GitHub build ${{ github.event.workflow_run.conclusion }}: ${{ github.event.workflow_run.html_url }}",
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "${{ github.event.workflow_run.head_repository.name }} build failed",
-                    "emoji": true
-                  }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "🛠️ Commit",
-                        "emoji": true
-                      },
-                      "url": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "👷 Pipeline",
-                        "emoji": true
-                      },
-                      "url": "${{ github.event.workflow_run.html_url }}"
+              "attachments": [{
+                "color": ${{ github.event.workflow_run.conclusion == 'success' && '#238823' || '#D2222D' }},
+                "blocks": [
+                  {
+                    "type": "header",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "${{ github.event.workflow_run.head_repository.name }} workflow ${{ github.event.workflow_run.conclusion }}",
+                      "emoji": true
                     }
-                  ]
-                }
-              ]
-            }
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
+                      {
+                        "type": "button",
+                        "text": {
+                          "type": "plain_text",
+                          "text": "🛠️ Commit",
+                          "emoji": true
+                        },
+                        "url": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}"
+                      },
+                      {
+                        "type": "button",
+                        "text": {
+                          "type": "plain_text",
+                          "text": "👷 Pipeline",
+                          "emoji": true
+                        },
+                        "url": "${{ github.event.workflow_run.html_url }}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }]
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
