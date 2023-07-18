@@ -20,6 +20,18 @@ jobs:
         status: ${{ github.event.workflow_run.conclusion }}
         context: Test Workflow
         sha: ${{ github.sha }}
+    - name: Find Slack user
+      id: find-slack-user
+      uses: scribd/find-slack-user-action@v1
+      with:
+        slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
+        email: jimmy@implicitconversions.com
+    - name: Print Slack user
+      run: |
+        echo "${{ steps.find-slack-user.outputs.username }}"
+        echo "${{ steps.find-slack-user.outputs.member-id }}"
+        echo "${{ steps.find-slack-user.outputs.found-user }}"
+
 
   previous-commit:
     runs-on: ubuntu-latest
