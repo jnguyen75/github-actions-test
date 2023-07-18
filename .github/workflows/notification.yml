@@ -87,7 +87,7 @@ jobs:
                     "type": "header",
                     "text": {
                       "type": "plain_text",
-                      "text": "$<${{ github.event.workflow_run.html_url }}|{{ github.event.workflow_run.head_repository.name }} Run #${{ github.event.workflow_run.id }} ${{ github.event.workflow_run.conclusion }}>",
+                      "text": "<${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.head_repository.name }} Run #${{ github.event.workflow_run.id }} ${{ github.event.workflow_run.conclusion }}>",
                       "emoji": true
                     }
                   },
