@@ -87,30 +87,20 @@ jobs:
                     "type": "header",
                     "text": {
                       "type": "plain_text",
-                      "text": "${{ github.event.workflow_run.head_repository.name }} workflow ${{ github.event.workflow_run.conclusion }}",
+                      "text": "$<${{ github.event.workflow_run.html_url }}|{{ github.event.workflow_run.head_repository.name }} Run #${{ github.event.workflow_run.id }} ${{ github.event.workflow_run.conclusion }}>",
                       "emoji": true
                     }
                   },
                   {
-                    "type": "actions",
-                    "elements": [
+                    "type": "section",
+                    "fields": [
                       {
-                        "type": "button",
-                        "text": {
-                          "type": "plain_text",
-                          "text": "🛠️ Commit",
-                          "emoji": true
-                        },
-                        "url": "https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}"
+                        "type": "mrkdwn",
+                        "text": "*Branch:*\n<https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/tree/${{ github.event.workflow_run.head_branch }}|${{ github.event.workflow_run.head_branch }}>"
                       },
                       {
-                        "type": "button",
-                        "text": {
-                          "type": "plain_text",
-                          "text": "👷 Pipeline",
-                          "emoji": true
-                        },
-                        "url": "${{ github.event.workflow_run.html_url }}"
+                        "type": "mrkdwn",
+                        "text": "*Commit:*\n<https://github.com/${{ github.event.workflow_run.head_repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}|${{ github.event.workflow_run.head_commit.message }}>"
                       }
                     ]
                   }
