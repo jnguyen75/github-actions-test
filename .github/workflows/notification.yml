@@ -45,7 +45,7 @@ jobs:
                   https://api.github.com/repos/${{ github.repository }}/commits/$previous_rev/status | \
                   jq -r '.state')
               echo "Previous state: $previous_state"
-              if [[ $previous_state -ne "pending" ]]; then
+              if [[ $previous_state != "pending" ]]; then
                   break
               else
                   sleep 1
