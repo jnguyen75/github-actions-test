@@ -24,28 +24,35 @@ jobs:
   previous-commit:
     runs-on: ubuntu-latest
     outputs:
-      commit_sha: ${{ steps.get-previous-commit.outputs.previous_sha }}
-      commit_state: ${{ steps.get-previous-state.outputs.previous_state }}
+      commit_sha: ${{ steps.previous-commit.outputs.previous_sha }}
+      commit_state: ${{ steps.previous-commit.outputs.previous_state }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Get previous commit
-        id: get-previous-commit
+        with:
+          fetch-depth: '0'
+      - name: Get previous commit state
+        id: previous-commit
+        timeout-minutes: 1
         run: |
-          parent_sha=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github.v3+json" \
-              https://api.github.com/repos/${{ github.repository }}/commits/${{ github.sha }} | \
-              jq -r '.parents[0].sha')
-          echo "Parent commit: $parent_sha"
+          for i in {1..50}
+          do
+              previous_rev=$(git rev-parse HEAD~$i)
+              echo "Previous commit: $previous_rev"
+
+              previous_state=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                  -H "Accept: application/vnd.github.v3+json" \
+                  https://api.github.com/repos/${{ github.repository }}/commits/$previous_rev/status | \
+                  jq -r '.state')
+              echo "Previous state: $previous_state"
+              if [[ $previous_state -eq "pending" ]]; then
+                  break
+              else
+                  sleep 1
+              fi
+          done
+          
           echo "previous_sha=$parent_sha" >> "$GITHUB_OUTPUT"
-      - name: Check previous commit state
-        id: get-previous-state
-        run: |
-          previous_state=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github.v3+json" \
-              https://api.github.com/repos/${{ github.repository }}/commits/${{ steps.get-previous-commit.outputs.previous_sha }}/status | \
-              jq -r '.state')
-          echo "Previous commit state: $previous_state"
           echo "previous_state=$previous_state" >> "$GITHUB_OUTPUT"
 
   new-commit-status:
