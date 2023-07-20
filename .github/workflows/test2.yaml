@@ -24,7 +24,7 @@ jobs:
       - run: exit 0
 
   post-build:
-    if: always()
+    if: ${{ always() }}
     needs:
       - test3
     uses: jnguyen75/github-actions-test/.github/workflows/notification.yml@main
