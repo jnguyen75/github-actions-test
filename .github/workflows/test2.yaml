@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: init
     steps:
-      - run: exit 3
+      - run: exit 0
 
   post-build:
     if: ${{ always() }}
