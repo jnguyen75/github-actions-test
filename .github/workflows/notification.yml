@@ -12,6 +12,10 @@ on:
         description: A string label to differentiate this status from the status of other systems.
         required: true
         type: string
+      max_previous_commits:
+        description: Maximum number of previous commits to check for a commit status.
+        default: 50
+        type: number
 
 jobs:
   post-build:
@@ -27,12 +31,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 50
+          fetch-depth: ${{ inputs.max_previous_commits }}
       - name: Get previous commit state
         id: previous-commit
         timeout-minutes: 1
         run: |
-          for i in {1..50}
+          for i in {1..${{ inputs.max_previous_commits }}}
           do
               previous_rev=$(git rev-parse HEAD~$i)
               echo "Previous commit: $previous_rev"
