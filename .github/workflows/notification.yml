@@ -8,7 +8,9 @@ on:
         default: success
         required: true
         type: string
-      
+      status_context:
+        type: string
+
 
     # workflows: [Test Workflow]
     # branches:
@@ -26,6 +28,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ inputs.job_status }}
+          context: ${{ inputs.status_context }}
       - name: Checkout code
         uses: actions/checkout@v2
         with:
