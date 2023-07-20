@@ -27,6 +27,7 @@ jobs:
       - run: exit 0
   test2:
     runs-on: ubuntu-latest
+    if: ${{ false }}
     needs: init
     steps:
       - run: exit 0

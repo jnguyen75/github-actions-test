@@ -52,7 +52,7 @@ jobs:
                   sleep 1
               fi
           done
-          
+
           echo "sha=$parent_sha" >> "$GITHUB_OUTPUT"
           echo "state=$previous_state" >> "$GITHUB_OUTPUT"
       - name: Send Slack Message
