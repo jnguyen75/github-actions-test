@@ -35,7 +35,7 @@ jobs:
     needs:
       - test1
       - test2
-    uses: jnguyen75/github-actions-test/.github/workflows/notification.yml
+    uses: jnguyen75/github-actions-test/.github/workflows/notification.yml@main
     with:
       # Job is determined successful if none of the builds failed or were cancelled.
       job_status: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'success' || 'failed' }}
