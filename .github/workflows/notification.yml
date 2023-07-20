@@ -1,48 +1,35 @@
-name: Test Notification
+name: Post Build Notification
 
 on:
-  workflow_run:
-    workflows: [Test Workflow]
-    branches:
-      - main
-      - releases/**
-    types: completed
+  workflow_call:
+    inputs:
+      job_status:
+        description: "Job status (typically job.status)"
+        default: success
+        required: true
+        type: string
+      
+
+    # workflows: [Test Workflow]
+    # branches:
+    #   - main
+    #   - releases/**
+    # types: completed
 
 jobs:
-  update-workflow-commit:
+  post-build:
     runs-on: ubuntu-latest
     steps:
-    - name: Set final commit status
-      uses: myrotvorets/set-commit-status-action@v1.1.7
-      if: always()
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        status: ${{ github.event.workflow_run.conclusion }}
-        context: Test Workflow
-        sha: ${{ github.sha }}
-    - name: Find Slack user
-      id: find-slack-user
-      uses: scribd/find-slack-user-action@v1
-      with:
-        slack-token: ${{ secrets.SLACK_BOT_TOKEN }}
-        email: jimmy@implicitconversions.com
-    - name: Print Slack user
-      run: |
-        echo "${{ steps.find-slack-user.outputs.username }}"
-        echo "${{ steps.find-slack-user.outputs.member-id }}"
-        echo "${{ steps.find-slack-user.outputs.found-user }}"
-
-
-  previous-commit:
-    runs-on: ubuntu-latest
-    outputs:
-      commit_sha: ${{ steps.previous-commit.outputs.previous_sha }}
-      commit_state: ${{ steps.previous-commit.outputs.previous_state }}
-    steps:
+      - name: Set final commit status
+        uses: myrotvorets/set-commit-status-action@v1.1.7
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ inputs.job_status }}
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 50
       - name: Get previous commit state
         id: previous-commit
         timeout-minutes: 1
@@ -64,15 +51,10 @@ jobs:
               fi
           done
           
-          echo "previous_sha=$parent_sha" >> "$GITHUB_OUTPUT"
-          echo "previous_state=$previous_state" >> "$GITHUB_OUTPUT"
-
-  new-commit-status:
-    runs-on: ubuntu-latest
-    needs: previous-commit
-    if: ${{ (needs.previous-commit.outputs.commit_state == 'success' && github.event.workflow_run.conclusion == 'failure') || needs.previous-commit.outputs.commit_state == 'failure' && github.event.workflow_run.conclusion == 'success' }}
-    steps:
+          echo "sha=$parent_sha" >> "$GITHUB_OUTPUT"
+          echo "state=$previous_state" >> "$GITHUB_OUTPUT"
       - name: Send Slack Message
+        if: ${{ steps.previous-commit.outputs.state != inputs.job_status }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           # Slack channel id, channel name, or user id to post message.
