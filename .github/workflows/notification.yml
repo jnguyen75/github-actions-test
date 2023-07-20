@@ -3,20 +3,15 @@ name: Post Build Notification
 on:
   workflow_call:
     inputs:
-      job_status:
-        description: "Job status (typically job.status)"
+      commit_status:
+        description: Commit status to set (one of "error", "failure", "pending", "success").
         default: success
         required: true
         type: string
       status_context:
+        description: A string label to differentiate this status from the status of other systems.
+        required: true
         type: string
-
-
-    # workflows: [Test Workflow]
-    # branches:
-    #   - main
-    #   - releases/**
-    # types: completed
 
 jobs:
   post-build:
@@ -27,7 +22,7 @@ jobs:
         if: always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          status: ${{ inputs.job_status }}
+          status: ${{ inputs.commit_status }}
           context: ${{ inputs.status_context }}
       - name: Checkout code
         uses: actions/checkout@v3
@@ -45,7 +40,7 @@ jobs:
               previous_state=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                   -H "Accept: application/vnd.github.v3+json" \
                   https://api.github.com/repos/${{ github.repository }}/commits/$previous_rev/status | \
-                  jq -r '.state')
+                  jq -r '.statuses[] | select(.context == ${{ inputs.status_context }}) | .state')
               echo "Previous state: $previous_state"
               if [[ $previous_state != "pending" ]]; then
                   break
@@ -57,7 +52,7 @@ jobs:
           echo "sha=$parent_sha" >> "$GITHUB_OUTPUT"
           echo "state=$previous_state" >> "$GITHUB_OUTPUT"
       - name: Send Slack Message
-        if: ${{ steps.previous-commit.outputs.state != inputs.job_status }}
+        if: ${{ steps.previous-commit.outputs.state != inputs.commit_status }}
         uses: slackapi/slack-github-action@v1.24.0
         with:
           # Slack channel id, channel name, or user id to post message.

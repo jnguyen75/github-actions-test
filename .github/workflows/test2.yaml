@@ -28,7 +28,7 @@ jobs:
       - test1
     uses: jnguyen75/github-actions-test/.github/workflows/notification.yml@main
     with:
-      # Job is determined successful if none of the builds failed or were cancelled.
-      job_status: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'success' || 'failure' }}
+      # Job is a failure if any builds failed or were cancelled.
+      commit_status: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || 'success' }}
       status_context: ${{ github.workflow }}
     secrets: inherit
