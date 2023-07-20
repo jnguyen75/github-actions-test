@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: init
     steps:
-      - run: exit 1
+      - run: exit 0
   test2:
     runs-on: ubuntu-latest
     needs: init
