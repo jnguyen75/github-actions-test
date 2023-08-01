@@ -31,15 +31,12 @@ jobs:
     steps:
       - run: exit 0
 
-  post-build:
+  notify-failure:
+    if: ${{ contains(needs.*.result, 'failure') && 'failure' || 'success' }}
     needs:
       - test1
       - test2
-    uses: jnguyen75/github-actions-test/.github/workflows/notification.yml@main
-    with:
-      # Job is a failure if any builds failed or were cancelled.
-      commit_status: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || 'success' }}
-      status_context: ${{ github.workflow }}
+    uses: jnguyen75/github-actions-test/.github/workflows/notify-slack-failure.yml@send-on-failure
     secrets: inherit
   
   post-build-2:
