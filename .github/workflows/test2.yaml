@@ -23,13 +23,9 @@ jobs:
     steps:
       - run: exit 0
 
-  post-build:
-    if: ${{ always() }}
+  notify-failure:
+    if: ${{ contains(needs.*.result, 'failure') }}
     needs:
       - test3
-    uses: jnguyen75/github-actions-test/.github/workflows/notification.yml@main
-    with:
-      # Job is a failure if any builds failed or were cancelled.
-      commit_status: ${{ (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && 'failure' || 'success' }}
-      status_context: ${{ github.workflow }}
+    uses: jnguyen75/github-actions-test/.github/workflows/notify-failure-slack.yml@main
     secrets: inherit
