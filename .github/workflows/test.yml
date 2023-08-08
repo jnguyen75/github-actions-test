@@ -14,9 +14,10 @@ jobs:
       - run: exit 0
   test2:
     runs-on: ubuntu-latest
-    if: ${{ false }}
+    needs:
+      - test1
     steps:
-      - run: exit 0
+      - run: echo ${{ toJson(needs) }}
 
   notify-failure:
     if: ${{ always() && contains(needs.*.result, 'failure') }}
