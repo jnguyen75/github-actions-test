@@ -1,0 +1,9 @@
+on:
+  schedule:
+    - cron: "* * * * *"
+
+jobs:
+  test1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ toJSON(github.event) }}"
