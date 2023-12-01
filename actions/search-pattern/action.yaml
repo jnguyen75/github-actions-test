@@ -21,10 +21,10 @@ runs:
     - name: Search for "${{ inputs.search-pattern }}"
       id: search
       run: |
-        echo "Searching for files with the string: ${{ inputs.search-string }}"
+        echo "Searching for files with the string: ${{ inputs.search-pattern }}"
         # Use grep to find files containing the specified string
         # Adjust the file patterns and search options as needed
-        matching_files=$(grep -r -l "${{ inputs.search-string }}" . || true)
+        matching_files=$(grep -r -l "${{ inputs.search-pattern }}" . || true)
 
         # Check if any files were found
         if [ -n "$matching_files" ]; then
