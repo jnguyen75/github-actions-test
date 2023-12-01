@@ -18,7 +18,7 @@ runs:
     - name: Search for "${{ inputs.search-pattern }}"
       id: search
       run: |
-        matching_files=$(grep -rnil --exclude-dir="${{ inputs.exclude-dir }}" "${{ inputs.search-string }}" . || true)
+        matching_files=$(grep -rnil --exclude-dir="${{ inputs.exclude-dir }}" "${{ inputs.search-pattern }}" . || true)
         echo "Found matching file(s):"
         echo $matching_files
 
