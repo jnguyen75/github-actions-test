@@ -16,9 +16,9 @@ jobs:
       - name: Check for 'donotcommit'
         uses: jnguyen75/github-actions-test/actions/search-pattern@main
         with:
-          search-pattern: donotcommit
+          search-pattern: do*commit
           exclude-dir: .git
-          fail-if-found: false
+          fail-if-found: true
 
 
   # notify-failure:
