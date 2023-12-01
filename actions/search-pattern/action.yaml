@@ -8,8 +8,8 @@ inputs:
     description: Comma separated list of directories to exclude from the search
     default: .git
   fail-if-found:
-    description: If enabled, fail if the pattern is found
-    default: "true"
+    description: 'If "true", fail if the pattern is found'
+    default: "false"
 runs:
   using: "composite"
   steps:
