@@ -56,8 +56,8 @@ jobs:
             echo "Failed: Test check-search-pattern didn't fail as expected"
             code=1
           fi
-          if [[ "${{ steps.search-string-not-found.outcome }}" != "succeed" ]]; then
-            echo "Failed: check-search-string didn't succeed as expected"
+          if [[ "${{ steps.search-string-not-found.outcome }}" != "success" ]]; then
+            echo "Failed: search-string-not-found didn't succeed as expected"
             code=1
           fi
 
