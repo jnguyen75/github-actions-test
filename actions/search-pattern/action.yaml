@@ -10,9 +10,6 @@ inputs:
   fail-if-found:
     description: If enabled, fail if the pattern is found
     default: "true"
-  search-path:
-    description: Path to search for
-    default: .
 runs:
   using: "composite"
   steps:
@@ -21,7 +18,7 @@ runs:
     - name: Search for "${{ inputs.search-pattern }}"
       id: search
       run: |
-        matching_files=$(grep -r -l "${{ inputs.search-string }}" . || true)
+        matching_files=$(grep -rnil --exclude-dir="${{ inputs.exclude-dir }}" "${{ inputs.search-string }}" . || true)
         echo "Found matching file(s):"
         echo $matching_files
         echo "matches=$matches" >> "$GITHUB_OUTPUT"
@@ -32,7 +29,7 @@ runs:
         matches="${{ steps.search.outputs.matches }}"
         [[ -z $matches ]] || {
           >&2 echo "Pattern detected in the following files(s):"
-          >&2 echo "$matches"
+          >&2 echo "$matches" | tr " " "\n"
           exit 1
         }
       shell: bash
