@@ -22,9 +22,9 @@ runs:
         echo "Found matching file(s):"
         echo $matching_files
 
-        >> $GITHUB_OUTPUT cat << BOOKENDS
-        matches="${matching_files//$'\n'/ }"
-        BOOKENDS
+        echo 'matches<<BOOKENDS' >> $GITHUB_OUTPUT
+        echo "$matching_files" >> $GITHUB_OUTPUT
+        echo 'BOOKENDS' >> $GITHUB_OUTPUT
       shell: bash
     - name: Fail if pattern is found
       if: ${{ inputs.fail-if-found == 'true' }}
@@ -32,7 +32,7 @@ runs:
         matches="${{ steps.search.outputs.matches }}"
         [[ -z $matches ]] || {
           >&2 echo "Pattern detected in the following files(s):"
-          >&2 echo "$matches" | tr " " "\n"
+          >&2 echo "$matches"
           exit 1
         }
       shell: bash
