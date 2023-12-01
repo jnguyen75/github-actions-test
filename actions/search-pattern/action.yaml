@@ -21,17 +21,18 @@ runs:
     - name: Search for "${{ inputs.search-pattern }}"
       id: search
       run: |
-        >> $GITHUB_OUTPUT cat << BOOKENDS
-        results=$(grep -rni --exclude-dir=".git" "${{ inputs.search-pattern }}" . || true)
-        BOOKENDS
+        matching_files=$(grep -r -l "${{ inputs.search-string }}" . || true)
+        echo "Found matching file(s):"
+        echo $matching_files
+        echo "matches=$matches" >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Fail if pattern is found
       if: ${{ inputs.fail-if-found == 'true' }}
       run: |
-        results="${{ steps.search.outputs.results }}"
-        [[ -z $results ]] || {
+        matches="${{ steps.search.outputs.matches }}"
+        [[ -z $matches ]] || {
           >&2 echo "Pattern detected in the following files(s):"
-          >&2 echo "$results"
+          >&2 echo "$matches"
           exit 1
         }
       shell: bash
