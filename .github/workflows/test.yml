@@ -37,15 +37,15 @@ jobs:
         run: |
           code=0
           if [[ "${{ steps.check-search-string.outcome }}" != "success" ]]; then
-            echo "Test check-search-string failed"
+            echo "Failed: check-search-string didn't pass as expected"
             code=1
           fi
           if [[ "${{ steps.check-fail-if-found.outcome }}" != "failure" ]]; then
-            echo "Test check-fail-if-found failed"
+            echo "Failed: check-fail-if-found didn't fail as expected.
             code=1
           fi
-          if [[ "${{ steps.check-search-pattern }}" != "failure" ]]; then
-            echo "Test check-search-pattern failed"
+          if [[ "${{ steps.check-search-pattern.outcome }}" != "failure" ]]; then
+            echo "Failed: Test check-search-pattern didn't fail as expected.
             code=1
           fi
 
