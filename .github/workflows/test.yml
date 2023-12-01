@@ -14,38 +14,48 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Check for 'donotcommit'
-        id: check-search-string
+        id: search-string
         uses: jnguyen75/github-actions-test/actions/search-pattern@main
         with:
           search-pattern: donotcommit
       - name: Check for 'donotcommit' (fail if found)
-        id: check-fail-if-found
+        id: fail-if-found
         continue-on-error: true
         uses: jnguyen75/github-actions-test/actions/search-pattern@main
         with:
           search-pattern: donotcommit
           fail-if-found: true
       - name: Check for 'do.*commit' pattern (fail if found)
-        id: check-search-pattern
+        id: search-pattern
         continue-on-error: true
         uses: jnguyen75/github-actions-test/actions/search-pattern@main
         with:
           search-pattern: do.*commit
           fail-if-found: true
+      - name: Check for 'stringnotfound'
+        id: search-string-not-found
+        uses: jnguyen75/github-actions-test/actions/search-pattern@main
+        with:
+          search-pattern: stringnotfound
+          fail-if-found: true
       - name: Check Test Results
         if: always()
         run: |
           code=0
-          if [[ "${{ steps.check-search-string.outcome }}" != "success" ]]; then
-            echo "Failed: check-search-string didn't pass as expected"
+          if [[ "${{ steps.search-string.outcome }}" != "success" ]]; then
+            echo "Failed: check-search-string didn't succeed as expected"
             code=1
           fi
-          if [[ "${{ steps.check-fail-if-found.outcome }}" != "failure" ]]; then
+          if [[ "${{ steps.fail-if-found.outcome }}" != "failure" ]]; then
             echo "Failed: check-fail-if-found didn't fail as expected"
             code=1
           fi
-          if [[ "${{ steps.check-search-pattern.outcome }}" != "failure" ]]; then
+          if [[ "${{ steps.search-pattern.outcome }}" != "failure" ]]; then
             echo "Failed: Test check-search-pattern didn't fail as expected"
+            code=1
+          fi
+          if [[ "${{ steps.search-string-not-found.outcome }}" != "success" ]]; then
+            echo "Failed: check-search-string didn't succeed as expected"
             code=1
           fi
 
