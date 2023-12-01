@@ -21,7 +21,10 @@ runs:
         matching_files=$(grep -rnil --exclude-dir="${{ inputs.exclude-dir }}" "${{ inputs.search-string }}" . || true)
         echo "Found matching file(s):"
         echo $matching_files
-        echo "matches=$matching_files" >> "$GITHUB_OUTPUT"
+
+        >> $GITHUB_OUTPUT cat << BOOKENDS
+        matches="${matching_files//$'\n'/ }"
+        BOOKENDS
       shell: bash
     - name: Fail if pattern is found
       if: ${{ inputs.fail-if-found == 'true' }}
