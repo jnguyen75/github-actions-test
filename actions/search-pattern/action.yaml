@@ -4,7 +4,7 @@ inputs:
   search-pattern:
     description: String pattern to search for
     required: true
-  exclude-dirs:
+  exclude-dir:
     description: Comma separated list of directories to exclude from the search
     default: .git
   fail-if-found:
@@ -21,11 +21,8 @@ runs:
     - name: Search for "${{ inputs.search-pattern }}"
       id: search
       run: |
-        exclude_dirs="${{ inputs.exclude-dirs }}"
-        exclude_dirs_str=$(echo "$exclude_dirs" | tr ',' '\n' | sed 's/^/--exclude-dir=/')
-
         >> $GITHUB_OUTPUT cat << BOOKENDS
-        results=$(grep -rni --exclude-dir=".git" $exclude_dirs_str "${{ inputs.search-pattern }}" ${{ inputs.search-path }})
+        results=$(grep -rni --exclude-dir=".git" "${{ inputs.search-pattern }}" . || true)
         BOOKENDS
       shell: bash
     - name: Fail if pattern is found
