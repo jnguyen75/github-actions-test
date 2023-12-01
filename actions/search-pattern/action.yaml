@@ -1,0 +1,38 @@
+name: Search Action
+description: Search for a string in the repo
+inputs:
+  search-pattern:
+    description: String pattern to search for
+    required: true
+  exclude-dirs:
+    description: Comma separated list of directories to exclude from the search
+    default: .git
+  fail-if-found:
+    description: If enabled, fail if the pattern is found
+    default: "true"
+  search-path:
+    description: Path to search for
+    default: .
+runs:
+  using: "composite"
+  steps:
+    # Don't check out the repo here, and just use whichever repo(s) and files are currently in
+    # the workspace.
+    - name: Search for "${{ input.search-pattern }}"
+      id: search
+      run: |
+        exclude_dirs="${{ inputs.exclude-dirs }}"
+        exclude_dirs_str=$(echo "$exclude_dirs" | tr ',' '\n' | sed 's/^/--exclude-dir=/')
+
+        >> $GITHUB_OUTPUT cat << BOOKENDS
+        results=$(grep -rni --exclude-dir=".git" $exclude_dirs_str "${{ inputs.search-pattern }}" ${{ inputs.search-path }})
+        BOOKENDS
+    - name: Fail if pattern is found
+      if: ${{ inputs.fail-if-found == 'true' }}
+      run: |
+        results="${{ steps.search.outputs.results }}"
+        [[ -z $results ]] || {
+          >&2 echo "Pattern detected in the following files(s):"
+          >&2 echo "$results"
+          exit 1
+        }
