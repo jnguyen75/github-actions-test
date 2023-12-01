@@ -18,7 +18,7 @@ runs:
   steps:
     # Don't check out the repo here, and just use whichever repo(s) and files are currently in
     # the workspace.
-    - name: Search for "${{ input.search-pattern }}"
+    - name: Search for "${{ inputs.search-pattern }}"
       id: search
       run: |
         exclude_dirs="${{ inputs.exclude-dirs }}"
@@ -27,6 +27,7 @@ runs:
         >> $GITHUB_OUTPUT cat << BOOKENDS
         results=$(grep -rni --exclude-dir=".git" $exclude_dirs_str "${{ inputs.search-pattern }}" ${{ inputs.search-path }})
         BOOKENDS
+      shell: bash
     - name: Fail if pattern is found
       if: ${{ inputs.fail-if-found == 'true' }}
       run: |
@@ -36,3 +37,4 @@ runs:
           >&2 echo "$results"
           exit 1
         }
+      shell: bash
