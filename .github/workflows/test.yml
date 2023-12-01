@@ -39,6 +39,7 @@ jobs:
         with:
           search-pattern: stringnotfound
           fail-if-found: true
+          exclude-dir: .git,.github
       - name: Check Test Results
         if: always()
         run: |
@@ -55,7 +56,7 @@ jobs:
             echo "Failed: Test check-search-pattern didn't fail as expected"
             code=1
           fi
-          if [[ "${{ steps.search-string-not-found.outcome }}" != "failure" ]]; then
+          if [[ "${{ steps.search-string-not-found.outcome }}" != "succeed" ]]; then
             echo "Failed: check-search-string didn't succeed as expected"
             code=1
           fi
