@@ -13,12 +13,12 @@ jobs:
     steps:
       - run: exit 0
       - name: Check for 'donotcommit'
-        uses: jnguyen75/github-actions-test/actions/search-pattern/action.yaml@main
+        uses: jnguyen75/github-actions-test/actions/search-pattern@main
         with:
           search-pattern: donotcommit
           exclude-dirs: .git
-          fail-if-not-found: true
-          path: .
+          fail-if-found: true
+          search-path: .
 
 
   # notify-failure:
