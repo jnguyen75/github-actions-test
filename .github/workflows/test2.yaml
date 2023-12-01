@@ -1,9 +1,9 @@
 name: Test 2 Workflow
 on:
-  push:
-    branches:
-      - main
-      - 'releases/**'
+  # push:
+  #   branches:
+  #     - main
+  #     - 'releases/**'
 
   workflow_dispatch:
 
@@ -13,9 +13,9 @@ jobs:
     steps:
       - run: exit 0
 
-  notify-failure:
-    if: ${{ always() && contains(needs.*.result, 'failure') }}
-    needs:
-      - test3
-    uses: jnguyen75/github-actions-test/.github/workflows/notify-failure-slack.yml@main
-    secrets: inherit
+  # notify-failure:
+  #   if: ${{ always() && contains(needs.*.result, 'failure') }}
+  #   needs:
+  #     - test3
+  #   uses: jnguyen75/github-actions-test/.github/workflows/notify-failure-slack.yml@main
+  #   secrets: inherit
