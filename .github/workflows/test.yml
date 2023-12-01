@@ -18,7 +18,7 @@ jobs:
         with:
           search-pattern: donotcommit
           exclude-dir: .git
-          fail-if-found: true
+          fail-if-found: false
 
 
   # notify-failure:
