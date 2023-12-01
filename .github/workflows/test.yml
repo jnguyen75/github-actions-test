@@ -12,14 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: exit 0
-  # test2:
-  #   runs-on: ubuntu-latest
-  #   needs:
-  #     - test1
-  #   steps:
       - name: Check for 'donotcommit'
         uses: jnguyen75/github-actions-test/actions/search-pattern/action.yaml@main
         with:
+          search-pattern: donotcommit
+          exclude-dirs: .git
+          fail-if-not-found: true
+          path: .
 
 
   # notify-failure:
