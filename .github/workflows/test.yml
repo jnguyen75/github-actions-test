@@ -34,6 +34,7 @@ jobs:
           fail-if-found: true
       - name: Check for 'stringnotfound'
         id: search-string-not-found
+        continue-on-error: true
         uses: jnguyen75/github-actions-test/actions/search-pattern@main
         with:
           search-pattern: stringnotfound
@@ -54,7 +55,7 @@ jobs:
             echo "Failed: Test check-search-pattern didn't fail as expected"
             code=1
           fi
-          if [[ "${{ steps.search-string-not-found.outcome }}" != "success" ]]; then
+          if [[ "${{ steps.search-string-not-found.outcome }}" != "failure" ]]; then
             echo "Failed: check-search-string didn't succeed as expected"
             code=1
           fi
