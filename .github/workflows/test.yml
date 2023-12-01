@@ -41,11 +41,11 @@ jobs:
             code=1
           fi
           if [[ "${{ steps.check-fail-if-found.outcome }}" != "failure" ]]; then
-            echo "Failed: check-fail-if-found didn't fail as expected.
+            echo "Failed: check-fail-if-found didn't fail as expected"
             code=1
           fi
           if [[ "${{ steps.check-search-pattern.outcome }}" != "failure" ]]; then
-            echo "Failed: Test check-search-pattern didn't fail as expected.
+            echo "Failed: Test check-search-pattern didn't fail as expected"
             code=1
           fi
 
