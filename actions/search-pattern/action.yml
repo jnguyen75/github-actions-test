@@ -4,9 +4,9 @@ inputs:
   search-pattern:
     description: String pattern to search for
     required: true
-  exclude-dir:
-    description: Comma separated list of directories to exclude from the search
-    default: .git
+  exclude-files:
+    description: File containing list of files to exclude
+    default: actions/search-pattern/exclude-files.txt
   fail-if-found:
     description: 'If "true", fail if the pattern is found'
     default: "false"
@@ -18,7 +18,7 @@ runs:
     - name: Search for "${{ inputs.search-pattern }}"
       id: search
       run: |
-        matching_files=$(grep -rnil --exclude-dir={${{ inputs.exclude-dir }}} "${{ inputs.search-pattern }}" . || true)
+        matching_files=$(git grep -E "${{ inputs.search-pattern }}" | ./actions/search-pattern/grep-with-exclude-list.sh ${{ inputs.exclude-files }} || true)
         echo "Found matching file(s):"
         echo $matching_files
 
