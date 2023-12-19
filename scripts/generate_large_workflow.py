@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # Specify the template file, output file, and context data
     template_path = 'scripts/large_workflow.yml'
     output_path = '.github/workflows/large-workflow.yml'
-    context = {'num_jobs': 256}
+    context = {'num_jobs': 1024}
 
     # Render the template and write to the output file
     render_template(template_path, output_path, context)

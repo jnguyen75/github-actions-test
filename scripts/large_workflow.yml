@@ -4,7 +4,7 @@ on:
 
 jobs:
   {% for n in range(num_jobs) %}
-  workflow-{{n + 1}}:
+  job-{{ '%04i' % n }}:
     runs-on: ubuntu-latest
     steps:
       - name: Test Command
