@@ -19,5 +19,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ needs.test-matrix-outputs.result }}"
-      - run: echo "${{ needs.test-matrix-outputs.outputs }}"
-      - run: echo "${{ needs.test-matrix-outputs.outcome }}"
+      - run: echo "${{ fromJson(needs.test-matrix-outputs.outputs) }}"
+      # - run: echo "${{ needs.test-matrix-outputs.outcome }}"
