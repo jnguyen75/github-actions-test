@@ -6,6 +6,7 @@ jobs:
   test-matrix-outputs:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         code: [0, 1]
     steps:
