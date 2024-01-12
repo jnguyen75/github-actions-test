@@ -13,6 +13,7 @@ jobs:
       - run: exit ${{ matrix.code }}"
 
   gather-matrix-results:
+    if: always()
     needs:
       - test-matrix-outputs
     runs-on: ubuntu-latest
