@@ -1,0 +1,21 @@
+name: Test Matrix Output
+on:
+  push:
+
+jobs:
+  test-matrix-outputs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        code: [0, 1]
+    steps:
+      - run: exit ${{ matrix.code }}"
+
+  gather-matrix-results:
+    needs:
+      - test-matrix-outputs
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ needs.test-matrix-outputs.result }}"
+      - run: echo "${{ needs.test-matrix-outputs.outputs }}"
+      - run: echo "${{ needs.test-matrix-outputs.outcome }}"
