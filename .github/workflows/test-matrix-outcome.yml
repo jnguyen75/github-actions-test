@@ -10,7 +10,7 @@ jobs:
       matrix:
         code: [0, 1]
     steps:
-      - run: exit ${{ matrix.code }}"
+      - run: exit ${{ matrix.code }}
 
   gather-matrix-results:
     if: always()
