@@ -2,6 +2,9 @@ name: Test Matrix
 on:
   push:
 
+env:
+  TEST_JSON_SECRET: ${{ secrets.TEST_JSON_SECRET }}
+
 jobs:
   matrix-inputs:
     outputs:
