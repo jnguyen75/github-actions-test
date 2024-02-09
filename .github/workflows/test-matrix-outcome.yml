@@ -10,7 +10,7 @@ jobs:
     steps:
       - id: inputs
         run: |
-          matrix='{"include": [{"code":"0"}, {"code":"1"}'
+          matrix='{"include": [{"code":"0"}, {"code":"1"}]}'
           echo "Found SKUs: $sku_dirs"
           {
             echo 'matrix<<BOOKENDS'
