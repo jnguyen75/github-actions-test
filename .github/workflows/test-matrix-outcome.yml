@@ -1,23 +1,29 @@
-name: Test Matrix Output
+name: Test Matrix
 on:
   push:
 
 jobs:
-  test-matrix-outputs:
+  matrix-inputs:
+    outputs:
+      matrix: ${{ steps.inputs.outputs.matrix }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: inputs
+        run: |
+          matrix='{"include": [{"code":"0"}, {"code":"1"}'
+          echo "Found SKUs: $sku_dirs"
+          {
+            echo 'matrix<<BOOKENDS'
+            echo "$matrix"
+            echo BOOKENDS
+          } >> "$GITHUB_OUTPUT"
+
+  test-matrix:
+    needs:
+      - matrix-inputs
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        code: [0, 1]
+      matrix: ${{fromJson(needs.matrix-inputs.outputs.matrix)}}
     steps:
       - run: exit ${{ matrix.code }}
-
-  gather-matrix-results:
-    if: always()
-    needs:
-      - test-matrix-outputs
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ needs.test-matrix-outputs.result }}"
-      - run: echo "${{ toJson(needs.test-matrix-outputs.outputs) }}"
-      # - run: echo "${{ needs.test-matrix-outputs.outcome }}"
