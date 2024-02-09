@@ -11,7 +11,11 @@ jobs:
       - id: inputs
         run: |
           matrix='{"include": [{"code":"0"}, {"code":"1"}]}'
-          echo "matrix='$matrix'" >> "$GITHUB_OUTPUT"
+          {
+            echo 'matrix<<BOOKENDS'
+            echo "$matrix"
+            echo BOOKENDS
+          } >> "$GITHUB_OUTPUT"
 
   test-matrix:
     needs:
