@@ -1,0 +1,23 @@
+name: Test Annotations
+
+on:
+  push:
+    branches:
+      - main
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: echo "::debug::Test debug"
+      - name: Notice
+        run: echo "::notice title=Notice::Test notice"
+      - name: Warning
+        run: echo "::warning title=Warning::Test warning"
+      - name: Error
+        run: echo "::error title=Error::Test error"
