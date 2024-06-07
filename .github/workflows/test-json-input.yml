@@ -1,0 +1,24 @@
+name: Test JSON Inputs
+
+on:
+    workflow_call:
+        inputs:
+            json-list:
+                description: JSON list in string format
+                default: '[]'
+                type: string
+
+    workflow_dispatch:
+        inputs:
+            json-list:
+                description: JSON list in string format
+                default: '[]'
+                type: string
+
+
+jobs:
+    check-inputs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print inputs
+              run: echo ${{ inputs.json-list }}
