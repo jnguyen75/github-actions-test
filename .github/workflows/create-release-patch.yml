@@ -1,0 +1,57 @@
+name: Create Release Patch
+
+on:
+  push:
+    branches:
+      - release/**
+
+
+jobs:
+  check-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Parse branch version
+        id: branch-version
+        run: |
+          branch=${{ github.ref }}
+
+          cat | tee -a $GITHUB_OUTPUT << EOF
+          version="${GIT_REF#ref/heads/release/}"
+          major="${version%%.*}"
+          minor="${version#*.}"
+          EOF
+      - name: Check if ${{ steps.branch-version.outputs.version }}.0 exists
+        id: check-base-version
+        env:
+          RELEASE_DOT_O: "${{ steps.branch-version.outputs.version }}.0"
+        run: |
+          if [[ $(git tag -l "$RELEASE_DOT_O") ]]; then
+            exists=true
+          else
+            exists=false
+          fi
+      - name: Determine patch version
+        id: patch-version
+        env:
+          BRANCH_VERSION: ${{ steps.branch-version.outputs.version }}
+          BASE_VERSION_EXISTS: ${{ steps.check-base-version.outputs.exists }}
+        run:
+          if [[ "$BASE_VERSION_EXISTS" == "true" ]]; then
+            patch_version="0"
+          else
+            base_version="${BRANCH_VERSION}.0"
+            patch_version=$(git rev-list --count ${base_version}..HEAD)
+          fi
+
+          cat | tee -a $GITHUB_OUTPUT << EOF
+          full_version="$BRANCH_VERSION.$patch_version"
+          patch=patch_version
+          EOF
+      - name: Push version tag
+        env:
+          FULL_VERSION: ${{ steps.patch-version.outputs.full_version }}
+        run: |
+          git tag -a v$FULL_VERSION -m "My version $FULL_VERSION"
+          git push origin v$FULL_VERSION
