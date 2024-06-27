@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  check-inputs:
+  create-release-patch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -16,7 +16,7 @@ jobs:
         id: branch-version
         run: |
           cat | tee -a $GITHUB_OUTPUT << EOF
-          version="${GIT_REF#refs/heads/release/}"
+          version="${GITHUB_REF#refs/heads/release/}"
           major="${version%%.*}"
           minor="${version#*.}"
           EOF
@@ -30,6 +30,8 @@ jobs:
           else
             exists=false
           fi
+
+          echo "exists=$exists" >> "$GITHUB_OUTPUT"
       - name: Determine patch version
         id: patch-version
         env:
@@ -39,8 +41,8 @@ jobs:
           if [[ "$BASE_VERSION_EXISTS" == "true" ]]; then
             patch_version="0"
           else
-            base_version="${BRANCH_VERSION}.0"
-            patch_version=$(git rev-list --count ${base_version}..HEAD)
+            base_version="$BRANCH_VERSION.0"
+            patch_version=$(git rev-list --count $base_version..HEAD)
           fi
 
           cat | tee -a $GITHUB_OUTPUT << EOF
