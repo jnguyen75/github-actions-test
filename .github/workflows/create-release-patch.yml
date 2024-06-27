@@ -33,7 +33,7 @@ jobs:
         env:
           BRANCH_VERSION: ${{ steps.branch-version.outputs.version }}
           BASE_VERSION_EXISTS: ${{ steps.initial-version.outputs.exists }}
-        run:
+        run: |
           if [[ $BASE_VERSION_EXISTS = true ]]; then
             patch_version="0"
           else
