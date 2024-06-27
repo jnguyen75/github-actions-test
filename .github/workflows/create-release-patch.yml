@@ -41,7 +41,7 @@ jobs:
         run: |
           if [[ $BASE_VERSION_EXISTS = true ]]; then
             base_version="$BRANCH_VERSION.0"
-            patch_version=$(git rev-list --count $base_version..HEAD)
+            patch_version=$(git rev-list --count v$base_version..HEAD)
           else
             patch_version="0"
           fi
