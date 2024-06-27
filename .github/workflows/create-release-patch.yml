@@ -16,12 +16,10 @@ jobs:
         id: branch-version
         run: |
           cat | tee -a $GITHUB_OUTPUT << EOF
-          version="${GITHUB_REF#refs/heads/release/}"
-          major="${version%%.*}"
-          minor="${version#*.}"
+          version=${GITHUB_REF#refs/heads/release/}
           EOF
-      - name: Check if X.Y.0 exists
-        id: check-base-version
+      - name: Check initial release version (X.Y.0) exists
+        id: initial-version
         env:
           RELEASE_DOT_O: "${{ steps.branch-version.outputs.version }}.0"
         run: |
@@ -36,9 +34,9 @@ jobs:
         id: patch-version
         env:
           BRANCH_VERSION: ${{ steps.branch-version.outputs.version }}
-          BASE_VERSION_EXISTS: ${{ steps.check-base-version.outputs.exists }}
+          BASE_VERSION_EXISTS: ${{ steps.initial-version.outputs.exists }}
         run:
-          if [[ "$BASE_VERSION_EXISTS" == "true" ]]; then
+          if [[ "$BASE_VERSION_EXISTS" = "true" ]]; then
             patch_version="0"
           else
             base_version="$BRANCH_VERSION.0"
@@ -46,7 +44,7 @@ jobs:
           fi
 
           cat | tee -a $GITHUB_OUTPUT << EOF
-          full_version="$BRANCH_VERSION.$patch_version"
+          full_version=$BRANCH_VERSION.$patch_version
           patch=$patch_version
           EOF
       - name: Push version tag
