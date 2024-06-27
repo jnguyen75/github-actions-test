@@ -13,6 +13,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
+          fetch-tags: true
           token: ${{ secrets.REPO_TOKEN }}
       - name: Parse branch version
         id: branch-version
