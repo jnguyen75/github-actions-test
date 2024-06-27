@@ -24,7 +24,7 @@ jobs:
           INITIAL_VERSION: "${{ steps.branch-version.outputs.version }}.0"
         run: |
           echo "Checking if initial version v$INITIAL_VERSION exists"
-          if [[ $(git tag -l "$INITIAL_VERSION") ]]; then
+          if [[ $(git tag -l "v$INITIAL_VERSION") ]]; then
             exists=true
           else
             exists=false
