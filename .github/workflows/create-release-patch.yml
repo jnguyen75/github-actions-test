@@ -21,9 +21,10 @@ jobs:
       - name: Check initial release version (X.Y.0) exists
         id: initial-version
         env:
-          RELEASE_DOT_O: "${{ steps.branch-version.outputs.version }}.0"
+          INITIAL_VERSION: "${{ steps.branch-version.outputs.version }}.0"
         run: |
-          if [[ $(git tag -l "$RELEASE_DOT_O") ]]; then
+          echo "Checking if initial version v$INITIAL_VERSION exists"
+          if [[ $(git tag -l "$INITIAL_VERSION") ]]; then
             exists=true
           else
             exists=false
