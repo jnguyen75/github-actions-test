@@ -15,14 +15,12 @@ jobs:
       - name: Parse branch version
         id: branch-version
         run: |
-          branch=${{ github.ref }}
-
           cat | tee -a $GITHUB_OUTPUT << EOF
-          version="${GIT_REF#ref/heads/release/}"
+          version="${GIT_REF#refs/heads/release/}"
           major="${version%%.*}"
           minor="${version#*.}"
           EOF
-      - name: Check if ${{ steps.branch-version.outputs.version }}.0 exists
+      - name: Check if X.Y.0 exists
         id: check-base-version
         env:
           RELEASE_DOT_O: "${{ steps.branch-version.outputs.version }}.0"
@@ -47,7 +45,7 @@ jobs:
 
           cat | tee -a $GITHUB_OUTPUT << EOF
           full_version="$BRANCH_VERSION.$patch_version"
-          patch=patch_version
+          patch=$patch_version
           EOF
       - name: Push version tag
         env:
