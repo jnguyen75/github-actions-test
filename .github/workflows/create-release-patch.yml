@@ -15,9 +15,7 @@ jobs:
       - name: Parse branch version
         id: branch-version
         run: |
-          cat | tee -a $GITHUB_OUTPUT << EOF
-          version=${GITHUB_REF#refs/heads/release/}
-          EOF
+          echo "version=${GITHUB_REF#refs/heads/release/}" >> "$GITHUB_OUTPUT"
       - name: Check initial release version (X.Y.0) exists
         id: initial-version
         env:
@@ -43,10 +41,7 @@ jobs:
             patch_version=$(git rev-list --count $base_version..HEAD)
           fi
 
-          cat | tee -a $GITHUB_OUTPUT << EOF
-          full_version=$BRANCH_VERSION.$patch_version
-          patch=$patch_version
-          EOF
+          echo "full_version=$BRANCH_VERSION.$patch_version" >> "$GITHUB_OUTPUT"
       - name: Push version tag
         env:
           FULL_VERSION: ${{ steps.patch-version.outputs.full_version }}
