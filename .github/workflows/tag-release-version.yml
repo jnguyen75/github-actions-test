@@ -1,0 +1,61 @@
+name: Tag Release Version
+
+on:
+  workflow_call:
+    outputs:
+      release-version:
+        description: "Release version for this particular commit on the release branch (i.e. X.Y.Z)"
+        value: ${{ jobs.tag-release-version.outputs.release-version }}
+
+jobs:
+  tag-release-version:
+    outputs:
+      release-version: ${{ steps.patch-version.outputs.release-version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ secrets.REPO_TOKEN }}
+      - name: Parse branch version
+        id: branch-version
+        run: |
+          echo "version=${GITHUB_REF#refs/heads/release/}" >> "$GITHUB_OUTPUT"
+      - name: Check initial release version (X.Y.0) exists
+        id: initial-version
+        env:
+          INITIAL_VERSION: "${{ steps.branch-version.outputs.version }}.0"
+        run: |
+          echo "Checking if initial version v$INITIAL_VERSION exists"
+          if [[ $(git tag -l "v$INITIAL_VERSION") ]]; then
+            exists=true
+          else
+            exists=false
+          fi
+
+          echo "exists=$exists" >> "$GITHUB_OUTPUT"
+      - name: Determine patch version
+        id: patch-version
+        env:
+          BRANCH_VERSION: ${{ steps.branch-version.outputs.version }}
+          BASE_VERSION_EXISTS: ${{ steps.initial-version.outputs.exists }}
+        run: |
+          if [[ $BASE_VERSION_EXISTS = true ]]; then
+            base_version="$BRANCH_VERSION.0"
+            patch_version=$(git rev-list --count v$base_version..HEAD)
+          else
+            patch_version="0"
+          fi
+
+          echo "release-version=$BRANCH_VERSION.$patch_version" >> "$GITHUB_OUTPUT"
+      - name: Push version tag
+        env:
+          FULL_VERSION: ${{ steps.patch-version.outputs.release-version }}
+        run: |
+          git config user.email "example@example.com"
+          git config user.name "Example User"
+
+          git tag -a v$FULL_VERSION -m "Version $FULL_VERSION"
+          git push origin v$FULL_VERSION

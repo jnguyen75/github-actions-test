@@ -7,52 +7,16 @@ on:
 
 
 jobs:
-  create-release-patch:
+  tag-release-version:
+    if: startsWith(github.ref_name, 'release/')
+    uses: ./.github/workflows/tag-release-version.yml
+
+  print-release-version:
+    needs:
+      - tag-release-version
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-          token: ${{ secrets.REPO_TOKEN }}
-      - name: Parse branch version
-        id: branch-version
+      - name: Release Version
         run: |
-          echo "version=${GITHUB_REF#refs/heads/release/}" >> "$GITHUB_OUTPUT"
-      - name: Check initial release version (X.Y.0) exists
-        id: initial-version
-        env:
-          INITIAL_VERSION: "${{ steps.branch-version.outputs.version }}.0"
-        run: |
-          echo "Checking if initial version v$INITIAL_VERSION exists"
-          if [[ $(git tag -l "v$INITIAL_VERSION") ]]; then
-            exists=true
-          else
-            exists=false
-          fi
+          echo "::notice::Tagged release version: ${{ needs.tag-release-version.outputs.release-version }}"
 
-          echo "exists=$exists" >> "$GITHUB_OUTPUT"
-      - name: Determine patch version
-        id: patch-version
-        env:
-          BRANCH_VERSION: ${{ steps.branch-version.outputs.version }}
-          BASE_VERSION_EXISTS: ${{ steps.initial-version.outputs.exists }}
-        run: |
-          if [[ $BASE_VERSION_EXISTS = true ]]; then
-            base_version="$BRANCH_VERSION.0"
-            patch_version=$(git rev-list --count v$base_version..HEAD)
-          else
-            patch_version="0"
-          fi
-
-          echo "full_version=$BRANCH_VERSION.$patch_version" >> "$GITHUB_OUTPUT"
-      - name: Push version tag
-        env:
-          FULL_VERSION: ${{ steps.patch-version.outputs.full_version }}
-        run: |
-          git config user.email "you@example.com"
-          git config user.name "Your Name"
-
-          git tag -a v$FULL_VERSION -m "My version $FULL_VERSION"
-          git push origin v$FULL_VERSION
