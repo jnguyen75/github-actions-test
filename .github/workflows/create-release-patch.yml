@@ -10,6 +10,7 @@ jobs:
   tag-release-version:
     if: startsWith(github.ref_name, 'release/')
     uses: ./.github/workflows/tag-release-version.yml
+    secrets: inherit
 
   print-release-version:
     needs:
